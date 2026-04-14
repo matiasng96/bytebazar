@@ -7,8 +7,7 @@ export default async function ChatPage({
 }) {
   const { id } = await params;
   return (
-    <div className="flex h-full flex-col">
-      <h1 className="p-4 text-xl font-semibold">Conversación {id}</h1>
+    <div className="flex h-full w-full flex-col p-4">
       <Chat />
     </div>
   );

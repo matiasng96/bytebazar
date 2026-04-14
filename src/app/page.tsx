@@ -3,7 +3,7 @@ import StartButton from "@/components/StartButton";
 export default function Home() {
   return (
     <main className="bg-background text-foreground flex min-h-screen flex-col text-center font-sans">
-      <header className="bg-primary text-primary-foreground py-4 text-2xl font-bold shadow-md">
+      <header className="border-b/t border-white/20 bg-white/70 py-4 text-2xl font-bold shadow-md backdrop-blur-md">
         <h1>AI Tutor App</h1>
       </header>
 

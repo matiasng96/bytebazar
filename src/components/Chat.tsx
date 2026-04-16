@@ -1,12 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import { Send, Bot, Sparkles, Code, Terminal } from "lucide-react";
 import { useChat } from "@ai-sdk/react";
 import { useState, useRef, useEffect } from "react";
-
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 export default function Chat() {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status, error } = useChat();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,13 +29,64 @@ export default function Chat() {
       <div className="w-full flex-1 overflow-y-auto p-4 sm:p-8">
         <div className="mx-auto max-w-3xl space-y-6">
           {messages.length === 0 && (
-            <div className="mt-20 text-center text-lg text-slate-500">
-              ¡Hola! Soy tu tutor de programación. Escribí tu pregunta abajo
-              para empezar.
-            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-20 flex flex-col items-center justify-center px-4 text-center"
+            >
+              {/* Ícono Principal con destello */}
+              <div className="relative mb-6">
+                <div className="absolute -inset-1 rounded-full bg-indigo-500/20 blur-xl"></div>
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600 text-white shadow-xl shadow-indigo-500/30">
+                  <Bot size={40} />
+                </div>
+              </div>
+
+              <h2 className="mb-2 text-2xl font-bold tracking-tight text-slate-800">
+                ¿Qué vamos a codear hoy?
+              </h2>
+              <p className="mb-8 max-w-sm text-slate-500">
+                Soy tu tutor experto en React, Next.js y TypeScript. Elegí una
+                sugerencia o haceme cualquier pregunta.
+              </p>
+
+              {/* Botones de sugerencias rápidas */}
+              <div className="grid w-full max-w-2xl grid-cols-1 gap-3 md:grid-cols-2">
+                {[
+                  {
+                    icon: <Code size={18} />,
+                    text: "Explicame qué son los React Hooks",
+                  },
+                  {
+                    icon: <Terminal size={18} />,
+                    text: "¿Cómo funciona el App Router en Next.js?",
+                  },
+                  {
+                    icon: <Sparkles size={18} />,
+                    text: "Hacé una analogía para entender TypeScript",
+                  },
+                  {
+                    icon: <Bot size={18} />,
+                    text: "Revisá y optimizá mi código",
+                  },
+                ].map((sug, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      sendMessage({ text: sug.text });
+                      setInput("");
+                    }}
+                    className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-left text-sm text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-md"
+                  >
+                    <div className="text-indigo-500">{sug.icon}</div>
+                    <span className="font-medium">{sug.text}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
           )}
 
-          {messages.map((m) => (
+          {messages.map((m, index) => (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -44,18 +96,29 @@ export default function Chat() {
               <div
                 className={`max-w-[85%] px-5 py-3.5 text-base shadow-sm sm:max-w-[75%] ${
                   m.role === "user"
-                    ? "rounded-3xl rounded-tr-sm bg-indigo-600 text-white"
+                    ? `rounded-3xl rounded-tr-sm bg-linear-to-tr from-indigo-600 to-violet-500 text-white shadow-indigo-500/20 ${error && index === messages.length - 1 ? "opacity-50" : ""}`
                     : "rounded-3xl rounded-tl-sm border border-slate-200 bg-slate-100 text-slate-800"
                 }`}
               >
                 {m.parts.map((part, partIndex) =>
                   part.type === "text" ? (
-                    <p
-                      key={partIndex}
-                      className="leading-relaxed whitespace-pre-wrap"
-                    >
-                      {part.text}
-                    </p>
+                    m.role === "user" ? (
+                      <p
+                        key={partIndex}
+                        className="leading-relaxed whitespace-pre-wrap"
+                      >
+                        {part.text}
+                      </p>
+                    ) : (
+                      <div
+                        key={partIndex}
+                        className="prose prose-slate max-w-none text-slate-800"
+                      >
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {part.text}
+                        </ReactMarkdown>
+                      </div>
+                    )
                   ) : null,
                 )}
               </div>
@@ -82,7 +145,7 @@ export default function Chat() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Preguntame sobre React, Node.js..."
+            placeholder="Preguntame..."
             className="w-full rounded-full bg-transparent py-4 pr-16 pl-6 text-slate-700 outline-none"
             disabled={status !== "ready" && status !== "error"}
           />

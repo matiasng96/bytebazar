@@ -12,6 +12,7 @@
     "@ai-sdk/google": "^3.0.61",
     "@ai-sdk/openai": "^3.0.52",
     "@ai-sdk/react": "^3.0.140",
+    "@tailwindcss/typography": "^0.5.19",
     "ai": "^6.0.156",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",

@@ -5,6 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
 export default function Chat() {
   const [input, setInput] = useState("");
   const { messages, sendMessage, status, error } = useChat();
@@ -94,11 +95,10 @@ export default function Chat() {
               className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[85%] px-5 py-3.5 text-base shadow-sm sm:max-w-[75%] ${
-                  m.role === "user"
-                    ? `rounded-3xl rounded-tr-sm bg-linear-to-tr from-indigo-600 to-violet-500 text-white shadow-indigo-500/20 ${error && index === messages.length - 1 ? "opacity-50" : ""}`
-                    : "rounded-3xl rounded-tl-sm border border-slate-200 bg-slate-100 text-slate-800"
-                }`}
+                className={`max-w-[85%] px-5 py-3.5 text-base shadow-sm sm:max-w-[75%] ${m.role === "user"
+                  ? `rounded-3xl rounded-tr-sm bg-linear-to-tr from-indigo-600 to-violet-500 text-white shadow-indigo-500/20 ${error && index === messages.length - 1 ? "opacity-50" : ""}`
+                  : "rounded-3xl rounded-tl-sm border border-slate-200 bg-slate-100 text-slate-800"
+                  }`}
               >
                 {m.parts.map((part, partIndex) =>
                   part.type === "text" ? (

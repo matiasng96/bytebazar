@@ -1,19 +1,5 @@
-import StartButton from "@/components/StartButton";
+import Chat from "@/components/Chat"
 
-export default function Home() {
-  return (
-    <main className="bg-background text-foreground flex min-h-screen flex-col text-center font-sans">
-      <header className="border-b/t border-white/20 bg-white/70 py-4 text-2xl font-bold shadow-md backdrop-blur-md">
-        <h1>AI Tutor App</h1>
-      </header>
-
-      <section className="bg-surface border-surface-border flex flex-col items-center gap-6 border-b py-16 shadow-inner">
-        <p className="text-muted-text text-xl font-medium">
-          Welcome to the AI Tutor APP!
-        </p>
-
-        <StartButton text="Start Learning" />
-      </section>
-    </main>
-  );
+export default function ChatPage() {
+  return <Chat />
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import StartButton from "@/components/StartButton";
 import { auth, signIn } from "@/auth";
 
@@ -38,4 +39,10 @@ export default async function Home() {
       </section>
     </main>
   );
+=======
+import Chat from "@/components/Chat"
+
+export default function ChatPage() {
+  return <Chat />
+>>>>>>> c4e3121037e1a1ce8eb3c628b5ad8f206e9b52b6
 }

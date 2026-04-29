@@ -2,14 +2,21 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-background: #ffffff;
-  --color-foreground: #0f172a;
+  --color-background: #f9fafb;
+  --color-foreground: #111827;
 
-  --color-primary: #6366f1;
-  --color-primary-foreground: #ffffff;
+  --color-brand-500: #7c3aed;
+  --color-brand-600: #6d28d9;
 
-  --color-surface: #f8fafc;
-  --color-surface-border: #e2e8f0;
+  --color-accent: #0d9488;
 
-  --color-muted-text: #64748b;
+  --color-chat-user: #f3f4f6;
+  --color-chat-user-text: #1f2937;
+  --color-chat-bot: var(--color-brand-500);
+  --color-chat-bot-text: #ffffff;
+
+  --color-surface: rgba(255, 255, 255, 0.8);
+  --color-surface-border: rgba(229, 231, 235, 0.6);
+
+  --color-muted: #9ca3af;
 }

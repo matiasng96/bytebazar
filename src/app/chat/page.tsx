@@ -1,10 +1,13 @@
 "use client";
 import TextareaAutosize from "react-textarea-autosize";
 import { useChat } from "@ai-sdk/react";
-import { useState } from "react";
+import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 export default function ChatPage() {
-  const { messages, status, error, sendMessage } = useChat();
+  const { messages, status, error, sendMessage, setMessages } = useChat({
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+  });
   const [input, setInput] = useState<string>("");
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -13,6 +16,26 @@ export default function ChatPage() {
     console.log(input, messages);
     setInput("");
   };
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await fetch("/api/chat");
+        const data = await res.json();
+
+        const history = data.map((m: any) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          parts: [{ type: "text", text: m.content }],
+        }));
+
+        setMessages(history);
+      } catch (err) {
+        console.error("Error cargando historial:", err);
+      }
+    };
+    fetchHistory();
+  }, [setMessages]);
 
   return (
     <article className="mx-auto flex h-full w-full max-w-3xl flex-col bg-transparent">
@@ -35,7 +58,11 @@ export default function ChatPage() {
               {message.parts.map((part, index) =>
                 part.type === "text" ? (
                   <div
-                    className="prose prose-sm max-w-none text-current"
+                    className={`prose prose-sm max-w-none ${
+                      message.role === "assistant"
+                        ? "prose-invert text-white marker:text-white"
+                        : "text-current"
+                    }`}
                     key={index}
                   >
                     <ReactMarkdown>{part.text}</ReactMarkdown>
@@ -68,14 +95,17 @@ export default function ChatPage() {
 
       {/* Formulario Flotante */}
       <div className="bg-transparent p-4 pb-6">
-        <form onSubmit={handleSubmit} className="flex items-end gap-2 bg-white p-2 rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100">
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-end gap-2 rounded-3xl border border-slate-100 bg-white p-2 shadow-lg shadow-slate-200/50"
+        >
           <TextareaAutosize
             minRows={1}
             maxRows={5}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Escribí tu mensaje..."
-            className="w-full resize-none bg-transparent px-4 py-3 text-foreground focus:outline-none"
+            className="text-foreground w-full resize-none bg-transparent px-4 py-3 focus:outline-none"
             onKeyDown={(e) => {
               // Enviar con Enter (sin Shift)
               if (e.key === "Enter" && !e.shiftKey) {
@@ -87,7 +117,7 @@ export default function ChatPage() {
           <button
             type="submit"
             disabled={!input.trim()}
-            className="bg-brand-600 hover:bg-brand-500 rounded-2xl px-5 py-3 font-medium text-white transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+            className="bg-brand-600 hover:bg-brand-500 rounded-2xl px-5 py-3 font-medium text-white shadow-md transition-all hover:shadow-lg disabled:opacity-50"
           >
             Enviar
           </button>

@@ -25,7 +25,8 @@
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
     "react-textarea-autosize": "^8.5.9",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

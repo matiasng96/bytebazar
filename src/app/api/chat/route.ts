@@ -1,13 +1,24 @@
+import { prisma } from "@/lib/prisma";
 import { convertToModelMessages, streamText } from "ai";
 import { google } from "@ai-sdk/google";
 import { auth } from "@/auth";
 export async function POST(req: Request) {
-  const { messages } = await req.json();
-
   const session = await auth();
-
   if (!session || !session.user) {
     return new Response("Unauthorized", { status: 401 });
+  }
+
+  const { messages } = await req.json();
+  const lastMessage = messages[messages.length - 1];
+
+  let chat = await prisma.chat.findFirst({
+    where: { userId: session.user.id as string },
+  });
+
+  if (!chat) {
+    chat = await prisma.chat.create({
+      data: { userId: session.user.id as string },
+    });
   }
 
   const result = streamText({

@@ -21,7 +21,7 @@ Este proyecto fue construido utilizando los estándares más modernos de la indu
 
 ## 🛠️ Cómo correr el proyecto localmente
 
-1. Clonar el repositorio: `git clone https://github.com/tu-usuario/ecommerce-ai-assistant.git`
+1. Clonar el repositorio: `git clone https://github.com/matiasng96/ecommerce-ai-assistant.git`
 2. Instalar dependencias: `npm install`
 3. Configurar las variables de entorno en un archivo `.env.local`:
    - `AUTH_SECRET`

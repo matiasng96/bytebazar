@@ -8,14 +8,15 @@ export default function ChatPage() {
   const { messages, status, error, sendMessage, setMessages } = useChat({
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
   });
+
   const [input, setInput] = useState<string>("");
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim()) return;
     sendMessage({ text: input });
-    console.log(input, messages);
     setInput("");
   };
+
   useEffect(() => {
     const fetchHistory = async () => {
       try {

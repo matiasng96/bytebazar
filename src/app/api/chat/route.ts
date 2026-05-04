@@ -82,12 +82,26 @@ export async function POST(req: Request) {
           // @ts-expect-error: Vercel AI SDK Zod inference mismatch
           execute: async ({ categoria }) => {
             try {
-              console.log("TOOL EJECUTANDOSE CON CATEGORIA:", categoria);
               // Acá simulamos una búsqueda rápida en una base de datos real
               const catalogo = [
-                { nombre: "MacBook Pro M3", categoria: "notebook", precio: 1500, stock: true },
-                { nombre: "Lenovo ThinkPad T14", categoria: "notebook", precio: 1200, stock: true },
-                { nombre: "iPhone 15", categoria: "celular", precio: 900, stock: false },
+                {
+                  nombre: "MacBook Pro M3",
+                  categoria: "notebook",
+                  precio: 1500,
+                  stock: true,
+                },
+                {
+                  nombre: "Lenovo ThinkPad T14",
+                  categoria: "notebook",
+                  precio: 1200,
+                  stock: true,
+                },
+                {
+                  nombre: "iPhone 15",
+                  categoria: "celular",
+                  precio: 900,
+                  stock: false,
+                },
               ];
 
               // Filtramos por coincidencia parcial en nombre o categoría
@@ -97,7 +111,6 @@ export async function POST(req: Request) {
                   p.categoria.toLowerCase().includes(query) ||
                   p.nombre.toLowerCase().includes(query),
               );
-              console.log("RESULTADO TOOL:", result);
               return result;
             } catch (err) {
               console.error("ERROR EN TOOL:", err);

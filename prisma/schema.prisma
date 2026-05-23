@@ -8,8 +8,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL") 
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -20,9 +21,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-
-  // TODO: Acá vas a tener que relacionar al usuario con sus chats
-  chats Chat[]
+  credits       Int       @default(5)
+  chats         Chat[]
 }
 
 model Account {

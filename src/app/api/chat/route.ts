@@ -188,3 +188,20 @@ export async function GET() {
   // Si tiene chat, le devolvemos el array de mensajes en formato JSON. Si no, un array vacío.
   return Response.json(chat?.messages || []);
 }
+
+export async function DELETE() {
+  const session = await auth();
+  if (!session?.user) return new Response("Unauthorized", { status: 401 });
+
+  const userDb = await prisma.user.findUnique({
+    where: { email: session.user.email as string },
+  });
+
+  if (!userDb) return new Response("User not found", { status: 404 });
+
+  await prisma.message.deleteMany({
+    where: { chat: { userId: userDb.id } },
+  });
+
+  return new Response("Chat history cleared", { status: 200 });
+}

@@ -1,5 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { Providers } from "@/components/Providers";
+import LanguageToggle from "@/components/LanguageToggle";
 
 export const metadata = {
   title: "ByteBazar",
@@ -15,11 +17,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      {/* El body envuelve a todos los {children}, ya sea el Home o el Chat */}
       <body
         className={`${inter.className} text-foreground min-h-screen bg-linear-to-br from-slate-50 to-slate-200 antialiased`}
       >
-        {children}
+        <Providers>
+          <LanguageToggle />
+          {children}
+        </Providers>
       </body>
     </html>
   );

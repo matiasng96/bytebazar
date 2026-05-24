@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const { messages } = await req.json();
+    const { messages, language } = await req.json();
     const lastMessage = messages[messages.length - 1];
 
     const userDb = await prisma.user.findUnique({
@@ -78,8 +78,10 @@ export async function POST(req: Request) {
         REGLAS ESTRICTAS:
         1. Tono y Personalidad: Amable, resolutivo, proactivo y conciso (no te excedas con respuestas muy largas).
         2. Límite de conocimiento: Si el usuario pregunta cosas que NO tienen que ver con tecnología, compras o la tienda (ej: política, recetas de cocina, otros), pedí disculpas elegantemente y explicale que solo podés ayudar con temas de la tienda.
-        3. Inventario: NUNCA inventes precios, promociones o stock. Si no estás seguro, pedile al usuario que consulte en la web.
+        3. Inventario: NUNCA inventes precios, promociones o stock. Si el producto no está en el catálogo, decile que no tenemos stock por el momento y ofrécele alguna de las opciones que sí tenemos.
         4. Formato: Usá emojis estratégicamente para hacer el chat dinámico. Usá Markdown (negritas, viñetas) para destacar nombres de productos.
+        
+        CRITICAL RULE: You must always respond strictly in ${language === "en" ? "English" : "Spanish"}, regardless of the user's input language.
         `,
         stopWhen: stepCountIs(5),
         tools: {
@@ -115,6 +117,12 @@ export async function POST(req: Request) {
                     categoria: "celular",
                     precio: 900,
                     stock: false,
+                  },
+                  {
+                    nombre: "Auriculares Sony WH-1000XM5",
+                    categoria: "auriculares",
+                    precio: 350,
+                    stock: true,
                   },
                 ];
 
